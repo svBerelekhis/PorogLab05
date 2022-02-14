@@ -1,0 +1,65 @@
+[ {
+  "id" : -5221905460277146528,
+  "name" : "w",
+  "coordinates" : {
+    "x" : 4,
+    "y" : 2
+  },
+  "creationDate" : 1644829897828,
+  "area" : 4,
+  "numberOfRooms" : 4,
+  "furnish" : "FINE",
+  "view" : "TERRIBLE",
+  "transport" : "FEW",
+  "house" : {
+    "name" : "ee",
+    "year" : 3,
+    "numberOfFloors" : 4
+  }
+}, {
+  "id" : -4512692058880552436,
+  "name" : "ww",
+  "coordinates" : {
+    "x" : 3334,
+    "y" : 44
+  },
+  "creationDate" : 1644828127140,
+  "area" : 55,
+  "numberOfRooms" : 33434,
+  "furnish" : "BAD",
+  "view" : "GOOD",
+  "transport" : null,
+  "house" : null
+}, {
+  "id" : -7353825063326554339,
+  "name" : "we",
+  "coordinates" : {
+    "x" : 33,
+    "y" : 44
+  },
+  "creationDate" : 1644828679422,
+  "area" : 55,
+  "numberOfRooms" : 333,
+  "furnish" : "BAD",
+  "view" : "GOOD",
+  "transport" : null,
+  "house" : null
+}, {
+  "id" : -6570351299026876514,
+  "name" : "имя",
+  "coordinates" : {
+    "x" : 3,
+    "y" : 11
+  },
+  "creationDate" : 1644843828164,
+  "area" : 321,
+  "numberOfRooms" : 3,
+  "furnish" : "FINE",
+  "view" : "TERRIBLE",
+  "transport" : "FEW",
+  "house" : {
+    "name" : "дом ",
+    "year" : 1,
+    "numberOfFloors" : 3
+  }
+} ]

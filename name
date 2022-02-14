@@ -1,0 +1,29 @@
+[ {
+  "id" : 11122,
+  "name" : "name",
+  "coordinates" : {
+    "x" : 1,
+    "y" : 2
+  },
+  "creationDate" : 1644596745125,
+  "area" : 3,
+  "numberOfRooms" : 4,
+  "furnish" : "FINE",
+  "view" : "TERRIBLE",
+  "transport" : "LITTLE",
+  "house" : null
+}, {
+  "id" : 1824476932149177854,
+  "name" : "wewewewe",
+  "coordinates" : {
+    "x" : 33,
+    "y" : 22
+  },
+  "creationDate" : 1644828043450,
+  "area" : 33,
+  "numberOfRooms" : 44,
+  "furnish" : "BAD",
+  "view" : "GOOD",
+  "transport" : null,
+  "house" : null
+} ]
