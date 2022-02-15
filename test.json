@@ -45,21 +45,17 @@
   "transport" : null,
   "house" : null
 }, {
-  "id" : -6570351299026876514,
-  "name" : "имя",
+  "id" : 5622061000500490655,
+  "name" : "elementScript",
   "coordinates" : {
-    "x" : 3,
-    "y" : 11
+    "x" : 21,
+    "y" : 22
   },
-  "creationDate" : 1644843828164,
-  "area" : 321,
-  "numberOfRooms" : 3,
+  "creationDate" : 1644908988276,
+  "area" : 3,
+  "numberOfRooms" : 2,
   "furnish" : "FINE",
   "view" : "TERRIBLE",
-  "transport" : "FEW",
-  "house" : {
-    "name" : "дом ",
-    "year" : 1,
-    "numberOfFloors" : 3
-  }
+  "transport" : null,
+  "house" : null
 } ]

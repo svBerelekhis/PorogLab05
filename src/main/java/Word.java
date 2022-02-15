@@ -6,19 +6,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Класс-база данных. Самый выжный класс в программе
+ * @autor Svetlana Berelekhis
+ * @version 1.0
+ */
 public class Word {
+    /** вектор, в котором хранятся данные*/
     Vector<Flat> flats;
+    /** дата создания*/
     private final Date date;
+    /** set из шв, которые уже присвоены*/
     private Set<Long> ides;
+    /** рандом для выбора следующего id*/
     Random random;
+    /** порядок в базе*/
     boolean isAscending;
-    public Word() {
-        flats = new Vector<>();
-        date = new Date();
-        ides = new HashSet<>();
-        random = new Random();
-        isAscending = true;
-    }
+
+    /**
+     * Констуктор - создание нового объекта класса
+     * @param fla - массив квартир, которые уже
+     */
     public Word(Flat[] fla){
         flats = new Vector<>();
         flats.addAll(Arrays.asList(fla));
@@ -33,6 +41,10 @@ public class Word {
     }
 
 
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     */
     public void execute(Command command){
         if (command == Command.HELP){
             helpCom();
@@ -48,18 +60,37 @@ public class Word {
             prDesCom();
         }
     }
+
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param id - long id, пользовательские данные
+     */
     public void execute(Command command, long id) throws IdNotFoundException {
         if (command == Command.REMOVE_BY_ID){
             removeByIdCom(id);
         }
 
     }
+
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param id - long id
+     * @param flatDTO - пользовательские данные
+     */
     public void execute(Command command, Long id,  FlatDTO flatDTO) throws IdNotFoundException {
         if (command == Command.UPDATE_ID){
             updateIdComm(id, flatDTO);
         }
 
     }
+
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param flatDTO - пользовательские данные
+     */
     public void execute(Command command, FlatDTO flatDTO) throws ToManyIndexesException {
         if (command == Command.ADD){
             addCom(flatDTO);
@@ -67,6 +98,12 @@ public class Word {
             addIfMINCom(flatDTO);
         }
     }
+
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param i - int, пользовательские данные
+     */
     public void execute(Command command, int i){
         if (command == Command.COUNT_LESS_THEN_NUMBER_OF_ROOMS){
             countLessCom(i);
@@ -74,11 +111,22 @@ public class Word {
             removeAtCom(i);
         }
     }
+
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param transport - Transport, пользоватеьские данные
+     */
     public void execute(Command command, Transport transport){
         if (command == Command.FILTER_GREATER_THAN_TRANSPORT){
             filterGreaterTr(transport);
         }
     }
+    /**
+     * Функция для передачи команды на исполнение
+     * @param command - команды
+     * @param file - файл для серилизации
+     */
     public void execute(Command command, File file){
         if (command == Command.SAVE){
             saveCom(file);
@@ -86,6 +134,9 @@ public class Word {
 
     }
 
+    /**
+     * Функция для выполнения команды PRINT_DESCENDIND
+     */
     private void prDesCom(){
         int i = flats.size() - 1;
         while (i >= 0){
@@ -94,6 +145,10 @@ public class Word {
         }
     }
 
+    /**
+     * Функция для выполнения команды REMOVE_AT
+     * @param i - int, пользовательские данные
+     */
     private void removeAtCom(int i){
         if (i >= 0 && i < flats.size()) {
             Flat f = flats.get(i);
@@ -104,6 +159,11 @@ public class Word {
             Printer.print("Такого индекса нет");
         }
     }
+
+    /**
+     * Функция для выполнения команды SAVE
+     * @param file - файл для серилизации
+     */
     private void saveCom(File file){
         ObjectMapper objectMapper = new ObjectMapper();
             try {
@@ -114,7 +174,10 @@ public class Word {
                 e.printStackTrace();
             }
     }
-
+    /**
+     * Функция для выполнения команды FILTER_GREATER_THAN_TRANSPORT
+     * @param transport - Transport, пользовательские данные
+     */
     private void filterGreaterTr(Transport transport){
         for (Flat flat : flats){
             if (flat.getTransport() != null && flat.getTransport().getCount() > transport.getCount()){
@@ -122,6 +185,11 @@ public class Word {
             }
         }
     }
+
+    /**
+     * Функция для выполнения команды COUNT_LESS_THEN_NUMBER_OF_ROOMS
+     * @param i - int, пользовательские данные
+     */
     private void countLessCom(int i){
         int counter = 0;
         for (Flat flat : flats){
@@ -131,6 +199,11 @@ public class Word {
         }
         Printer.print(counter);
     }
+
+    /**
+     * Функция для генерации следующего id
+     * @return  id - long, новый id
+     */
     private long generateId() throws ToManyIndexesException {
         if (ides.size() >= Integer.MAX_VALUE){
             throw new ToManyIndexesException();
@@ -143,18 +216,27 @@ public class Word {
         return nowRand;
     }
 
+    /**
+     * Функция для выполнения команды HELP
+     */
     private void helpCom(){
         for(Command command : Command.values()){
             Printer.print(command.getDescription());
         }
     }
 
+    /**
+     * Функция для выполнения команды INFO
+     */
     private void infoCom(){
         Printer.print("Коллекция реализованная на " + flats.getClass().getName());
         Printer.print("Дата создания коллекции: " + date);
         Printer.print("В коллеции " + flats.size() +" элементов");
     }
 
+    /**
+     * Функция для выполнения команды SHOW
+     */
     private void showCom(){
         Printer.print("В коллеции лежат следующие элементы:");
         for(Flat flat : flats){
@@ -162,6 +244,10 @@ public class Word {
         }
     }
 
+    /**
+     * Функция для выполнения команды ADD
+     * @param flatDTO - FlatDTO, пользовательские данные
+     */
     private void addCom(FlatDTO flatDTO) throws ToManyIndexesException {
         long id = generateId();
         addFlatToFlats(id, flatDTO);
@@ -172,6 +258,11 @@ public class Word {
         sortedThis();
     }
 
+    /**
+     * Функция для выполнения команды UPDATE_ID
+     * @param id - id квартиры, в которой меняются данные
+     * @param flatDTO - FlatDTO, пользовательские данные
+     */
     private void updateIdComm(long id, FlatDTO flatDTO) throws IdNotFoundException{
         removeByIdCom(id);
         addFlatToFlats(id, flatDTO);
@@ -180,6 +271,10 @@ public class Word {
 
     }
 
+    /**
+     * Функция для выполнения команды REMOVE_BY_ID
+     * @param id - id квартиры, которую удаляем
+     */
     private void removeByIdCom(long id) throws IdNotFoundException {
         if (!ides.contains(id)){
             throw new IdNotFoundException();
@@ -195,12 +290,19 @@ public class Word {
         sortedThis();
     }
 
+    /**
+     * Функция для выполнения команды CLEAR
+     */
     private void clearCom(){
         flats = new Vector<>();
         ides = new HashSet<>();
     }
 
-
+    /**
+     * Функция для добавления новой квартиры в вектор
+     * @param id - сгенерированный id
+     * @param flatDTO - FlatDTO, пользовательские данные
+     */
     private void addFlatToFlats(Long id, FlatDTO flatDTO) {
         Date date = new Date();
         Flat flat = new Flat(id, date);
@@ -210,6 +312,10 @@ public class Word {
         sortedThis();
     }
 
+    /**
+     * Функция для выполнения команды ADD_IF_MIN
+     * @param flatDTO - FlatDTO, пользовательские данные
+     */
     private void addIfMINCom(FlatDTO flatDTO) throws ToManyIndexesException {
         if (flats.size() <= 0) {
             addCom(flatDTO);
@@ -221,11 +327,17 @@ public class Word {
         sortedThis();
     }
 
+    /**
+     * Функция для выполнения команды REORDER
+     */
     private void reorderCom(){
         isAscending = !isAscending;
         sortedThis();
     }
 
+    /**
+     * Функция, сортирующая вектор flats в зависимости от isAscending
+     */
     private void sortedThis(){
         if (isAscending){
             Collections.sort(flats);

@@ -1,3 +1,8 @@
+/**
+ * Энум, хранящий доступные команды
+ * @autor Svetlana Berelekhis
+ * @version 1.0
+ */
 public enum Command {
     HELP("help : вывести справку по доступным командам"),
     INFO("info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)"),
@@ -16,12 +21,21 @@ public enum Command {
     FILTER_GREATER_THAN_TRANSPORT("filter_greater_than_transport transport : вывести элементы, значение поля transport которых больше заданного"),
     PRINT_DESCENDIND("print_descending : вывести элементы коллекции в порядке убывания");
 
+    /** Строка-описание команды*/
     private final String description;
 
+    /**
+     * Конструктор - создание нового объекта
+     * @param description - описание
+     */
     Command(String description) {
         this.description = description;
     }
 
+    /**
+     * Функция получения значения поля {@link Command#description}
+     * @return возвращает описание команды
+     */
     public String getDescription() {
         return description;
     }

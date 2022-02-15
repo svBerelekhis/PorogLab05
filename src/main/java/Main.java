@@ -4,8 +4,15 @@ import java.io.File;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Основной класс программы. Здесь происходит первичный разбор вводимых команд.
+ * @autor Svetlana Berelekhis
+ * @version 1.0
+ */
+
 public class Main {
     public static void main(String[] args) throws ToManyIndexesException, IdNotFoundException {
+        /** name файла, в котором лежит сериализованная база */
         String filename = "test.json";
         ObjectMapper objectMapper = new ObjectMapper();
         Flat[] masOfFlats = new Flat[0];
@@ -37,7 +44,7 @@ public class Main {
             } else if ("save".equals(com)){
                 word.execute(Command.SAVE, new File("test.json"));
             } else if ("execute_script".equals(com)){
-                ScriptExecuter scriptExecuter = new ScriptExecuter(scanner.next(), word);
+                ScriptExecuter scriptExecuter = new ScriptExecuter(scanner.next(), word, filename);
                 scriptExecuter.execute();
             } else if ("remove_at".equals(com)){
                 int index = -1;
@@ -104,6 +111,10 @@ public class Main {
         scanner.close();
     }
 
+    /**
+     * Функция для считывания данных квартиры
+     * @return FlatDTO - данные квартиры, которые ввел пользователь
+     */
     static FlatDTO readFlatDTO(Scanner scanner){
         scanner.nextLine();
         Printer.print("Введите имя. Оно не может быть пустой строкой");
@@ -241,6 +252,10 @@ public class Main {
         return new FlatDTO(name, coordinates, nowDate, area, numberOfRooms, furnish, view, transport, house);
     }
 
+    /**
+     * Функция для считывания с консоли инта не меньше нуля
+     * @return возвращает int больше нуля, ввседенного с консоли
+     */
     private static int readIntMoreThenNull(Scanner scanner){
         int myInt = -1;
         while (myInt <= 0){

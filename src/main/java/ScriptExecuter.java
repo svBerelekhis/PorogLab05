@@ -3,15 +3,34 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Класс для первичного разбора команд, написанных в скрипте.
+ * @autor Svetlana Berelekhis
+ * @version 1.0
+ */
 public class ScriptExecuter {
+    /** имя файла, из которого читаем скрипт*/
     String fileName;
+    /** база, с которой работаем*/
     Word word;
-    File file;
+    /** имя файла, в который серилизуем*/
+    String fileToSave;
 
-    public ScriptExecuter(String fileName, Word word) {
+    /**
+     * Конструктор - создание нового объекта с определенными значениями
+     * @param fileName - String, имя файла, из которого читаем скрипт
+     * @param word - Word, база, с которой работаем
+     * @param fileToSave - String, имя файла, в который серилизуем
+     */
+    public ScriptExecuter(String fileName, Word word, String fileToSave) {
         this.fileName = fileName;
         this.word = word;
+        this.fileToSave = fileToSave;
     }
+
+    /**
+     * Функция, выполняющая первичный разбор команд
+     */
     public void execute(){
         try {
             Scanner scanner = new Scanner(new File(this.fileName));
@@ -54,7 +73,42 @@ public class ScriptExecuter {
                 }else if ("clear".equals(com)){
                     word.execute(Command.CLEAR);
                 } else if ("save".equals(com)){
-                    saveToFile(file);
+                    saveToFile(new File(fileToSave), word);
+                }else if ("execute_script".equals(com)){
+                    ScriptExecuter scriptExecuter = new ScriptExecuter(scanner.next(), word, fileToSave);
+                    scriptExecuter.execute();
+                } else if ("remove_at".equals(com)){
+                    try {
+                        int index = (int) readId(scanner);
+                        word.execute(Command.REMOVE_AT, index);
+                    }catch (NumberFormatException e){
+                        Printer.print("команда remove_at пропущена из-за неверного ввода числа");
+                    }
+                } else if ("add_if_min".equals(com)){
+                    try {
+                        word.execute(Command.ADD_IF_MIN, readFlatDTO(scanner));
+                    } catch (ToManyIndexesException e) {
+                        Printer.print("команда add_if_min пропущена из-за того, вектор заполнен полностью");
+                    } catch (WrongFormAtScriptException e) {
+                        Printer.print("команда add_if_min пропущена из-за неверного ввода");
+                    }
+                } else if ("reorder".equals(com)) {
+                    word.execute(Command.REORDER);
+                }  else if ("print_descending".equals(com)) {
+                    word.execute(Command.PRINT_DESCENDIND);
+                } else if ("count_less_than_number_of_rooms".equals(com)) {
+                    try {
+                        int numbOfRooms = (int) readId(scanner);
+                        word.execute(Command.COUNT_LESS_THEN_NUMBER_OF_ROOMS, numbOfRooms);
+                    }catch (NumberFormatException e){
+                        Printer.print("команда count_less_than_number_of_rooms пропущена из-за неверного ввода числа");
+                    }
+                }else if ("filter_greater_than_transport".equals(com)){
+                    try {
+                        word.execute(Command.FILTER_GREATER_THAN_TRANSPORT, readTransport(scanner));
+                    } catch (WrongFormAtScriptException e) {
+                        Printer.print("команда filter_greater_than_transport пропущена из-за неверного ввода transport");
+                    }
                 }
                 com = scanner.next();
             }
@@ -64,11 +118,40 @@ public class ScriptExecuter {
 
     }
 
-    static long readId(Scanner scanner) throws NumberFormatException {
-        Printer.print("Введите id");
+    /**
+     * Функция, считывающая Transport
+     * @return Transport transport
+     */
+    Transport readTransport(Scanner scanner) throws WrongFormAtScriptException {
+        Transport transport;
+        String str = scanner.next();
+        if ("FEW".equals(str)) {
+            transport = Transport.FEW;
+        } else if ("NONE".equals(str)) {
+            transport = Transport.NONE;
+        } else if ("LITTLE".equals(str)) {
+            transport = Transport.LITTLE;
+        } else if ("ENOUGH".equals(str)) {
+            transport = Transport.ENOUGH;
+        } else {
+            throw new WrongFormAtScriptException();
+        }
+        return transport;
+    }
+
+    /**
+     * Функция, считывающая long
+     * @return long
+     */
+    long readId(Scanner scanner) throws NumberFormatException {
         return Long.parseLong(scanner.next());
     }
-    static FlatDTO readFlatDTO(Scanner scanner) throws WrongFormAtScriptException, NumberFormatException {
+
+    /**
+     * Функция, считывающая flatDTO
+     * @return FlatDTO flatDTO
+     */
+    FlatDTO readFlatDTO(Scanner scanner) throws WrongFormAtScriptException, NumberFormatException {
         scanner.nextLine();
         String name = scanner.nextLine();
         if ("".equals(name)) {
@@ -87,7 +170,7 @@ public class ScriptExecuter {
         }
         scanner.nextLine();
         String str = scanner.nextLine();
-        Furnish furnish = null;
+        Furnish furnish;
         if ("DESIGNER".equals(str)) {
             furnish = Furnish.DESIGNER;
         } else if ("FINE".equals(str)) {
@@ -107,13 +190,12 @@ public class ScriptExecuter {
             view = View.GOOD;
         }else if ("TERRIBLE".equals(str)){
             view = View.TERRIBLE;
-        } else {
+        } else if (!"".equals(str)){
             throw new WrongFormAtScriptException();
         }
         Transport transport = null;
         str = scanner.nextLine();
-        if ("".equals(str)){
-        }else if ("FEW".equals(str)){
+        if ("FEW".equals(str)){
             transport = Transport.FEW;
         }else if ("NONE".equals(str)){
             transport = Transport.NONE;
@@ -127,7 +209,6 @@ public class ScriptExecuter {
         str = scanner.nextLine();
         House house = null;
         if (!"".equals(str)){
-            String nowName = str;
             int nowYear = Integer.parseInt(scanner.next());
             if (nowYear <= 0) {
                 throw new WrongFormAtScriptException();
@@ -136,13 +217,16 @@ public class ScriptExecuter {
             if (nowNumberOfFloors <= 0){
                 throw new WrongFormAtScriptException();
             }
-            house = new House(nowName, nowYear, nowNumberOfFloors);
+            house = new House(str, nowYear, nowNumberOfFloors);
             }
         Date nowDate = new Date();
         return new FlatDTO(name, coordinates, nowDate, area, numberOfRooms, furnish, view, transport, house);
     }
-    static void saveToFile(File file){
-
+    /**
+     * Функция, передающая базе команду на серилизацию
+     */
+    static void saveToFile(File file, Word word){
+        word.execute(Command.SAVE, file);
     }
 }
 
